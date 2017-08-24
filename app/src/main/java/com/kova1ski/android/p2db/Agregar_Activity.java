@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 
+import static java.lang.Integer.parseInt;
+
 public class Agregar_Activity extends AppCompatActivity {
 
     EditText editTextNombre;
@@ -28,7 +30,7 @@ public class Agregar_Activity extends AppCompatActivity {
                 // Este bloque es para probar que se recogen
                 // bien los valores de los editText usando el Snackbar
                 String nombre = editTextNombre.getText().toString();
-                String telefono = editTextTelefono.getText().toString();
+                int telefono = parseInt(editTextTelefono.getText().toString());
                 // ---------------------------fin del bloque
                 Snackbar.make(view, "Mira cómo recojo los campos de " + nombre + " y " + telefono, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
