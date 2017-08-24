@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">P2db</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_agregar_">Agregar_Activity</string>
+    <string name="pasas_de_actividad">Pasas de actividad</string>
+    <string name="nombre">Nombre</string>
+    <string name="numero">numero</string>
+    <string name="telefono">telefono</string>
 </resources>
