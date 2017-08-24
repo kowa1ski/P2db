@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import static com.kova1ski.android.p2db.data.P2dbContract.*;
+
 /**
  * Created by Usuario on 24/08/2017.
  */
@@ -22,6 +24,15 @@ public class P2dbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        // Creammos un String que contenga las sentencias SQL
+        String SQL_CREATE_TABLE = "CREATE TABLE " + P2dbEntry.TABLE_NAME + " ("
+                + P2dbEntry.CN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + P2dbEntry.CN_NOMBRE + " TEXT NOT NULL, "
+                + P2dbEntry.CN_TELEFONO + " INTEGER);";
+
+        // ejecución del código inmediato
+        db.execSQL(SQL_CREATE_TABLE);
 
     }
 
