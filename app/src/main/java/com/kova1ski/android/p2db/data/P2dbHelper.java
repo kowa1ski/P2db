@@ -9,8 +9,15 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class P2dbHelper extends SQLiteOpenHelper {
-    public P2dbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+
+    // Nombre de la base de datos
+    private final static String DATA_BASE_NAME = "P2db";
+    // número de versión de la base de datos
+    private final static int DATA_BASE_VERSION = 1 ;
+
+    // Le quitamos los parámetros que no nos hacen falta y le pasamos las variables que acabamos de crear
+    public P2dbHelper(Context context) {
+        super(context, DATA_BASE_NAME, null, DATA_BASE_VERSION);
     }
 
     @Override
