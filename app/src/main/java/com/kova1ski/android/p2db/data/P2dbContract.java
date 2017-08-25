@@ -17,15 +17,15 @@ public class P2dbContract {
 
     // declaramos el Content Authority
     // con el nombre del paquete
-    private static final String CONTENT_AUTHORITY = "com.kova1ski.android.p2db" ;
+    public static final String CONTENT_AUTHORITY = "com.kova1ski.android.p2db" ;
 
     // y declaramos la base para la , uri , del content provider
-    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     // posible path, o sea, una terminación posible de la uri.
     // Le doy el nombre de path segment porque es la denominación
     // que me pide en el , withAppendedPath ,.
-    private static final String PATH_SEGMENT = "p2tabla";
+    public static final String PATH_SEGMENT = "p2tabla";
 
     // CLASE INTERNA que nombramos para definir los valores de las columnas.
     // Para mejor compatibilidad, le implementamos , Basecolumns ,.
