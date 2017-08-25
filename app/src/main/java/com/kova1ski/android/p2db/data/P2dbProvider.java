@@ -46,9 +46,16 @@ public class P2dbProvider extends ContentProvider {
         sUriMatcher.addURI(P2dbContract.CONTENT_AUTHORITY, P2dbContract.PATH_SEGMENT + "/#", SINGLE_ITEM_ID);
     }
 
+    // Declaramos el objeto DbHelper
+    private P2dbHelper mDbHelper;
+
+    // Ahora sí, inicializamos el provider con el objeto dbHelper y está
+    // guay porque le marcamos un getContext()
+    // Y también le devolvemos un valor , true ,.
     @Override
     public boolean onCreate() {
-        return false;
+        mDbHelper = new P2dbHelper(getContext());
+        return true;
     }
 
     @Nullable
