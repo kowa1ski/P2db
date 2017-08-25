@@ -124,10 +124,27 @@ public class P2dbProvider extends ContentProvider {
         return cursor;
     }
 
+    /**
+     * Devuelve el tipo MIME del dato contenido en el URI
+     * @param uri
+     * @return
+     */
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        return null;
+
+        final int match = sUriMatcher.match(uri);
+        switch (match){
+            case TODA_LA_TABLA:
+                // Esta variable que se devuelve es una String que es una dirección
+                return P2dbEntry.CONTENT_LIST_TYPE;
+            case SINGLE_ITEM_ID:
+                return P2dbEntry.CONTENT_ITEM_TYPE;
+            // aprovechamos el , defaul , para controlar la excepción
+            default:
+                throw new IllegalStateException("desconocida URI " + uri + " con match " + match);
+        }
+        // Evidentemente, el , return null , nos lo cargamos porque ya hemos , return , en el método
     }
 
     @Nullable
