@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import static com.kova1ski.android.p2db.data.P2dbContract.*;
 
@@ -150,7 +151,69 @@ public class P2dbProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        return null;
+        // Es sencillo. Únicamente vamos a medir esa URI para comprobar que
+        // se refiere a un sólo item. Si es así llamaremos a otro método, el
+        // cual crearemos también, para insertar el nuevo item.
+        final int match = sUriMatcher.match(uri);
+        switch (match){
+            case SINGLE_ITEM_ID:
+                // Si no aseguramos de que vamos a insertar un sólo item
+                // entonces vamos a ejecutar un método que tenemos que
+                // crear para para ello. A ese método hay que pasarle esta
+                // , URI , que acabamos de comprobar y también el
+                // , ContentValues , que en este método vemos que se llama , values ,.
+                return insertNewItem(uri, values);
+            default:
+                throw new IllegalArgumentException("La inserción no es soportada para " + uri);
+        }
+    }
+
+    private Uri insertNewItem(Uri uri, ContentValues values) {
+
+        // Pues ya estamos aquí que venimos desde el método insert.
+        // Aquí retornaremos un nuevo contenido URI para una , row , dentro de
+        // la base de datos.
+
+        // Antes de nada vamos a chequear que el nombre no sea , null , porque
+        // cuando declaramos la columna al crear la base le digimos que no
+        // podía serlo, que era NOT NULL
+        String nombreQueEstamosComprobando = values.getAsString(P2dbEntry.CN_NOMBRE);
+        if (nombreQueEstamosComprobando == null ){
+            // si es null pues controlamos esta excepción
+            throw new IllegalArgumentException("ERROR. El nombre es null y el campo es NOT NULL");
+        }
+
+        // No necesitamos chequear el teléfono que es un , int , porque
+        // le digimos a la base que podía ser null. Esto pasó porque NO le
+        // especificamos NOT NULL a drede porque este campo hemos decidico que
+        // puede estar vacío.
+
+        // Ahora accedemos a la base en modo WRITABLE
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Una vez conseguido el acceso anterior, vamos a añadir un
+        // nuevo item
+        // Y metemos la instrucción en una variable de tipo , long , para
+        // medir si ha salido tod bien. Si el resultado es -1 es que
+        // algo a salido mal
+        long id = database.insert(P2dbEntry.TABLE_NAME, null, values);
+        if (id == -1 ) {
+            // Si esto ocurre dejaremos una notita en los Logs
+            Log.e("LogTag", "ERROR al insertar row con " + uri);
+            return null;
+        }
+
+        // Notificamos a todos los listeners que los datos han
+        // cambiado para el contenido del URI de la tabla
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        // Una vez que sabemos el _id de la nueva row de la tabla,
+        // retornamos la nueva URI con el _id pegado al final del mismo y
+        // para ello usamos la variable , id , que declaramos long unas
+        // líneas más arriba.
+        return ContentUris.withAppendedId(uri, id);
+
+
     }
 
     @Override
@@ -163,3 +226,30 @@ public class P2dbProvider extends ContentProvider {
         return 0;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
