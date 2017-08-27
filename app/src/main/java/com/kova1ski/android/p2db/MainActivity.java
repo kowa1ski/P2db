@@ -1,6 +1,9 @@
 package com.kova1ski.android.p2db;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,8 +12,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
+// En este punto de comit nos vemos obligados a , implements , LoaderManager.ETC.... , e
+// implementar los 3 métodos
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+    // Esto no sé ahora mismo por qué lo pondo pero seguro que es sano
+    // declarar el loader y establecerlo a 0.
+    private static final int ITEMS_LOADER = 0;
+    // delaramos el , CursorAdapter ,.
+    P2bdCursorAdapter p2bdCursorAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +42,26 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+        // Buscamos la lista donde publicamos los registros que devulelve el cursor.
+        ListView itemListView = (ListView) findViewById(R.id.listaItemsEnContentMain);
+
+        // Llamamos al adapter para crear una lista para cada registro
+        // Todavía no hay ningún registro (hasta que el loader acabe) así que
+        // lo pasamos en null para el cursor.
+        p2bdCursorAdapter = new P2bdCursorAdapter(this, null);
+        itemListView.setAdapter(p2bdCursorAdapter);
+
+
+        // No sé muy bien cómo funciona esto pero sí que veo que sirve para
+        // inicializar el , Loader ,. El Android Studio me pide sólo dos
+        // parámetros dentro de los paréntesis, o al menos eso parece. Lo que
+        // sí es cierto es que es así y añado más. El , this , sólo funciona si
+        // arriba se implementa el Loader.
+        getLoaderManager().initLoader(ITEMS_LOADER, null, this);
+
+
     }
 
     @Override
@@ -52,5 +84,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }

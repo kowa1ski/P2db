@@ -6,4 +6,5 @@
     <string name="nombre">Nombre</string>
     <string name="numero">numero</string>
     <string name="telefono">telefono</string>
+    <string name="mostrar_listado_aqui">aquí estará el listado pulsa el boton para añadir a alguien</string>
 </resources>
