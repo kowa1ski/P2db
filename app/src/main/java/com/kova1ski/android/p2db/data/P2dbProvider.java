@@ -151,9 +151,12 @@ public class P2dbProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        // Es sencillo. Únicamente vamos a medir esa URI para comprobar que
-        // se refiere a un sólo item. Si es así llamaremos a otro método, el
+        // Es sencillo. Si estamos aquí es porque
+        // queremos insertar un nuevo item. Si es así llamaremos a otro método, el
         // cual crearemos también, para insertar el nuevo item.
+        // Medimos la , URI , con el , UriMatcher , y comprobamos que viene bien
+        // sabiendo que la terminación es 100, o sea, que es toda la tabla porque
+        // insertamos un registro de nueva creación contra TODA LA TABLA.
         final int match = sUriMatcher.match(uri);
         switch (match){
             case TODA_LA_TABLA:
