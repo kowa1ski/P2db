@@ -23,6 +23,10 @@
             android:name=".Agregar_Activity"
             android:label="@string/title_activity_agregar_"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <provider
+            android:authorities="com.kova1ski.android.p2db"
+            android:name= ".data.P2dbProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

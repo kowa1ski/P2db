@@ -156,7 +156,7 @@ public class P2dbProvider extends ContentProvider {
         // cual crearemos también, para insertar el nuevo item.
         final int match = sUriMatcher.match(uri);
         switch (match){
-            case SINGLE_ITEM_ID:
+            case TODA_LA_TABLA:
                 // Si no aseguramos de que vamos a insertar un sólo item
                 // entonces vamos a ejecutar un método que tenemos que
                 // crear para para ello. A ese método hay que pasarle esta
