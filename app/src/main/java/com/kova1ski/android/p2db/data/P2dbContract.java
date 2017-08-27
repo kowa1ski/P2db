@@ -25,7 +25,7 @@ public class P2dbContract {
     // posible path, o sea, una terminación posible de la uri.
     // Le doy el nombre de path segment porque es la denominación
     // que me pide en el , withAppendedPath ,.
-    public static final String PATH_SEGMENT = "p2tabla";
+    public static final String PATH_SEGMENT = "p2db";
 
     // CLASE INTERNA que nombramos para definir los valores de las columnas.
     // Para mejor compatibilidad, le implementamos , Basecolumns ,.
@@ -39,8 +39,8 @@ public class P2dbContract {
         // TODO no estoy muy convencido de lo que he hecho.
         // En el ejemplo se asigna el valor a la variable entre comillas con
         // un "p2tabla" pero es que lo he visto y es idéntico al PATH_SEGMENT.
-        // Creo que voy a dejarlo así.
-        public static final String TABLE_NAME = PATH_SEGMENT;
+        // Creo que voy a dejarlo así. Ya lo he cambiado a texto en verde.
+        public static final String TABLE_NAME = "p2db";
 
         // Ahora el nombre de las columnas
         /**

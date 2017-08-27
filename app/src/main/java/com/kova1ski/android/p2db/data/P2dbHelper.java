@@ -13,7 +13,7 @@ import static com.kova1ski.android.p2db.data.P2dbContract.*;
 public class P2dbHelper extends SQLiteOpenHelper {
 
     // Nombre de la base de datos
-    private final static String DATA_BASE_NAME = "P2db";
+    private final static String DATA_BASE_NAME = "p2db.sqlite";
     // número de versión de la base de datos
     private final static int DATA_BASE_VERSION = 1 ;
 
