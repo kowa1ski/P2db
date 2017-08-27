@@ -1,6 +1,7 @@
 package com.kova1ski.android.p2db;
 
 import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -13,6 +14,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+
+import com.kova1ski.android.p2db.data.P2dbContract;
+
+import static com.kova1ski.android.p2db.data.P2dbContract.*;
 
 // En este punto de comit nos vemos obligados a , implements , LoaderManager.ETC.... , e
 // implementar los 3 métodos
@@ -86,18 +91,54 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
+    // Y ahora a completar el loader. Se han generado estos
+    // 3 métodos con la bombilla al implementar el loader
+    // allá arriba.
+    //
+    // El primero de ellos es decirle al loader lo que tiene que
+    // hacer cuando es creado.
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+        // Definimos una , projection , que especifica las columnas
+        // de la tabla de la tabla que nos interesa.
+        String[] projection = {
+                P2dbEntry.CN_ID,
+                P2dbEntry.CN_NOMBRE,
+                P2dbEntry.CN_TELEFONO
+        };
+
+        // Este loader ejecutará el método , query , del ContentProvider en un
+        // hilo en background.
+        // Y EFECTIVAMENTE ES LO QUE DEVOLVEMOS EN ESTE MÉTODO
+       return new CursorLoader(this,    // Qué va a ser, pues el contexto
+               P2dbEntry.CONTENT_URI,   // URI del Content Provider para consultar
+               projection,              // Columnas a incluir en el Cursor resultante
+               null,                    // Es la CLAUSULA, no se selecciona nada
+               null,                    // No selection arguments
+               null);                   // Default short order
+
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Actualizamos el CursorAdapter con este nuevo Cursor el cual
+        // contiene los datos de los items ya actualizado.
+        //
+        // Que no llame a error la variable , data ,. Esa variable es el
+        // Cursor que viene al método y que la llama data. Es sólo
+        // un nombre de variabe de Cursor que podría ser Antonio.
+        p2bdCursorAdapter.swapCursor(data);
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        // Callback es llamado cuando los datos necesita ser eliminado.
+        // En el null me está pidiendo el nuevoCursor así que
+        // se lo paso en null.
+        p2bdCursorAdapter.swapCursor(null);
 
     }
 }
