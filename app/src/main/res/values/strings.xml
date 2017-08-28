@@ -7,4 +7,6 @@
     <string name="numero">numero</string>
     <string name="telefono">telefono</string>
     <string name="mostrar_listado_aqui">aquí estará el listado pulsa el boton para añadir a alguien</string>
+    <string name="titulo_agregar_item">AGREGAR UN NUEVO REGISTRO</string>
+    <string name="texto_vacio" />
 </resources>

@@ -2,6 +2,7 @@ package com.kova1ski.android.p2db;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -130,7 +131,17 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
             // Esto tendría la intención de ser un nuevo item.
             // Vamos a hacer algo ya que estamos aquí y vamos a
             // cambiar el título de la actividad para que ponga algo descriptivo.
-            setTitle("AGREGAR UN NUEVO REGISTRO");
+            // (en este comit convertimos el texto raw en variable)
+            setTitle(getString(R.string.titulo_agregar_item));
+        } else {
+            // Si estamos en el , else , es que la URI traía regalito así
+            // que vamos a cargar el loader. Sólo a mandar su carga.
+            getLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, this);
+            // Y una vez cargado, el flujo de este Loader continua en
+            // los métodos de abajo
+
+            // Y de paso le cambiamos el título a la actividad
+            setTitle("EDITAR ESTE REGISTRO");
         }
 
 
@@ -191,16 +202,76 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+        // Si estamos aquí es que hemos mandado cargar este loader y
+        // queremos que cargue los datos en los campos correspondientes
+        // para ser editados. Para ello lo primero que debemos hacer es tachán
+        // tachán... EXACTO: generar un cursor para leer de él. En nuestro
+        // caso, que tenemos los cojones como el caballo de Espartero, vamos
+        // a cargar un CURSORLOADER.
+        // Primero ya sabes, la projection.
+        String[] projection = {
+                P2dbEntry.CN_ID,
+                P2dbEntry.CN_NOMBRE,
+                P2dbEntry.CN_TELEFONO
+        }; // Y este punto y coma que hay que poner
+
+        // Así que el siguiente loader ejecutará el método query del Content Provider.
+        // El resultado será exactamente lo que devuelva este método, y ya.
+        return new CursorLoader(this,   // Parent activity
+                currentItemUri,         // En la query montamos el contenido de la URI para el item actual
+                projection,             // Las columnas que vamos a querer extraer
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null                    // Default short order
+        );
+
+
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Y una vez cargado el cursor, en el método anterior, vamos a
+        // comprobar que ha salido bien. Si el cursor es null o tiene menos de una fila
+        // es que no hay filas cargadas en el cursor.
+        // ATENTOS que el método llama al cursor , data ,.
+        if (data == null || data.getCount() < 1){
+            return;
+
+        }
+
+        // Si ha salido tod bien, vamos al lío yvamos a obtener primero
+        // todos los datos que nos interesan.
+
+        // Empezamos con esta instrucción que lo que hace es llevar el
+        // puntero al principio del cursor y empezar a leer ahí
+        if (data.moveToFirst()){
+            // Buscamos las columnas con los atributos del item.
+            int nombreColumIndex = data.getColumnIndex(P2dbEntry.CN_NOMBRE);
+            int telefonoColumIndex = data.getColumnIndex(P2dbEntry.CN_TELEFONO);
+
+            // Después de saber las columnas, extraemos los valores
+            String nombreParaEditar = data.getString(nombreColumIndex);
+            int telefonoParaEditar = data.getInt(telefonoColumIndex);
+
+            // Y, como no, actualizamos los campos para que se vea
+            // lo que queremos editar.
+            // Tenemos un poco de cuidado con diferenciar los datos de
+            // String y los , int , y arreglado.
+            editTextNombre.setText(nombreParaEditar);
+            editTextTelefono.setText(Integer.toString(telefonoParaEditar));
+
+        }
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
+        // Por último, a la salida del loader, tenemos que acordarnos de dejar
+        // los editText en blanco.
+        editTextNombre.setText(R.string.texto_vacio);
+        editTextTelefono.setText(R.string.texto_vacio);
 
     }
 }
