@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import static com.kova1ski.android.p2db.data.P2dbContract.*;
 
@@ -241,6 +242,8 @@ public class P2dbProvider extends ContentProvider {
         // que 0.
         int rowsUpdated = database.update(P2dbEntry.TABLE_NAME, values, selection, selectionArgs);
 
+
+
         // IMPORTANTE !!!!
         // Si 1 o más rows se han visto afectadas, entonces noficamos a todos
         // los LISTENERs que los datos han cambiado.
@@ -248,6 +251,8 @@ public class P2dbProvider extends ContentProvider {
         if (rowsUpdated != 0 ){
             getContext().getContentResolver().notifyChange(uri, null);
         }
+
+
 
         // Por último, como es lógico, retornamos el número de filas updateadas
         return rowsUpdated;
