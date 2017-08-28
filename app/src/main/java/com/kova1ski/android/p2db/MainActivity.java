@@ -1,10 +1,12 @@
 package com.kova1ski.android.p2db;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.kova1ski.android.p2db.data.P2dbContract;
@@ -57,6 +60,38 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // lo pasamos en null para el cursor.
         p2bdCursorAdapter = new P2bdCursorAdapter(this, null);
         itemListView.setAdapter(p2bdCursorAdapter);
+
+
+        // Justo antes de de iniciar el loader, vamos a colocar un listener
+        // que esté escuchando dónde pulsamos en pantalla, en qué item pulsamos
+        // para así poder establecer un método que nos valga para la edición del item
+        // en cuestión. La secuencia será saber el item que es mediante su pulsación y
+        // después mandar, en el interior de un , intent , el _id del item a la
+        // pantalla de edición(que será la misma que la de agregación pero con
+        // pequeñas modificaciones).
+        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                // Primero crearemos un nuevo intent si es que ocurre esta acción.
+                Intent intent = new Intent(MainActivity.this, Agregar_Activity.class);
+
+                // Formamos la URI que representa el item específico con
+                // la terminación del _id(pasado como input en este método
+                // y llamado , long id ,) teniendo
+                // como base el CONTENT_URI.
+                // Por ejemplo, tenemos la URI que hemos dicho y le añadimos
+                // la terminación , /2 , si es que el _id del item clickado
+                // es el 2.
+                Uri currentItemUri = ContentUris.withAppendedId(P2dbEntry.CONTENT_URI, id);
+
+                // Pasamos la información del URI al intent.
+                intent.setData(currentItemUri);
+
+                // ES FACIL. Ahora lanzamos el intent a la otra pantalla
+                startActivity(intent);
+            }
+        });
 
 
         // No sé muy bien cómo funciona esto pero sí que veo que sirve para
