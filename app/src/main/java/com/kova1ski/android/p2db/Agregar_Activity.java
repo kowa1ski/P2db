@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -169,6 +170,16 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
         nombre = editTextNombre.getText().toString();
         telefono = parseInt(editTextTelefono.getText().toString());
 
+        // Vamos a chequear que NO estamos tratando con un currentItem ni
+        // y que todos los editText están vacíos. En ese caso no hay nada que
+        // hacer y vamos a retornar sin hacer absolutamente nada.
+        if (currentItemUri == null && TextUtils.isEmpty(nombre)
+                && telefono == 0 ){
+            // Si esta comprobación es positiva es que tod está vacío y por
+            // tanto nada hay por hacer y se devuelve la acción sin más.
+            return;
+        }
+
         /**
          * En primer lugar vamos a insertar algunos registros en la base.
          * Para ello vamos a establecer la estructura básica de inserción
@@ -180,23 +191,54 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
         contentValues.put(P2dbEntry.CN_NOMBRE, nombre);
         contentValues.put(P2dbEntry.CN_TELEFONO, telefono);
 
-        // Insert a new pet into the provider, returning the content URI for the new pet.
-        // Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
-        // Insertamos el nuevo item en el provider y
-        // la ejecución de ese código nos devuelve la , URI , del nuevo registro.
-        Uri newUri = getContentResolver().insert(P2dbEntry.CONTENT_URI, contentValues);
 
-        // Y ahora vamos a comprobar que el registro ha entrado en la base
-        // de manera correcta.
-        if(newUri == null){
-            // si es null es que ha habido algún error en el código
-            Toast.makeText(this, "ERROR, registro no insertado", Toast.LENGTH_LONG).show();
+        // Ahora debemos determinar si estamos tratando con la intención
+        // de insertar un nuevo registro o, por el contrario, lo que
+        // queremos es usar este procedimiento para que el comportamiento del botón
+        // sea el de edición de un item previamente conocido.
+        if (currentItemUri == null){
+
+            // ESTE BLOQUE QUE OPERABA FUERA AHORA ESTÁ DENTRO DEL IF PARA
+            // Insert a new pet into the provider, returning the content URI for the new pet.
+            // Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
+            // Insertamos el nuevo item en el provider y
+            // la ejecución de ese código nos devuelve la , URI , del nuevo registro.
+            Uri newUri = getContentResolver().insert(P2dbEntry.CONTENT_URI, contentValues);
+
+            // Y ahora vamos a comprobar que el registro ha entrado en la base
+            // de manera correcta.
+            if(newUri == null){
+                // si es null es que ha habido algún error en el código
+                Toast.makeText(this, "ERROR, registro no insertado", Toast.LENGTH_LONG).show();
+
+            } else {
+                // En caso contrario, el registro se ha insertado de manera correcta feliz.
+                Toast.makeText(this, "REGISTRO AÑADIDO CORRECTAMENTE", Toast.LENGTH_LONG).show();
+            }
 
         } else {
-            // En caso contrario, el registro se ha insertado de manera correcta feliz.
-            Toast.makeText(this, "REGISTRO AÑADIDO CORRECTAMENTE", Toast.LENGTH_LONG).show();
-        }
+            // En este caso, en este caso contrario, en este caso en el que no es un nuevo
+            // registro, es que se trata de la edición.
+            // Para la edición vamos a "updatear" el registro. Los parámetros que necesitamos
+            // serán únicamente el currentItem, evidentemente y por otro lado
+            // el contenedor de valores que ya tenemos cargado así que, mediante
+            // un , getContentResolver() lo tenemos tod controlado.
+            // La ejecución de esta línea de código da como resultado un número de
+            // columnas "updateadas" por lo que si medimos que las mismas no
+            // sean 0, estaremos seguros de que la edición se ha realizado.
+            int rowsAffectedFilasAfectadas = getContentResolver().update(currentItemUri, contentValues, null, null);
 
+            // Lo dicho, ahora medimos el resultado y se lo decimos al usuario
+            if (rowsAffectedFilasAfectadas == 0) {
+                // Si no ha habido filas afectadas es que no se ha realizado ingún update.
+                Toast.makeText(this, "EDICIÓN DE ITEM FALLIDA", Toast.LENGTH_SHORT).show();
+            } else {
+                // Pero si devuelve que sí que hay alguna fila, quiere decir que por lo
+                // menos una de ellas ha sido updateada. Y lo decimos también.
+                Toast.makeText(this, "EDICIÓN REALIZADA CON ÉXITO", Toast.LENGTH_SHORT).show();
+            }
+
+        }
 
     }
 

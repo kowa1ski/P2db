@@ -224,9 +224,33 @@ public class P2dbProvider extends ContentProvider {
         return 0;
     }
 
+
+    // Debemos completar aquí el provider para poder updatear desde la pantalla de edición
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        // Hasta ahora retornaba 0 este método porque retornaba las 0 filas modificadas
+        // Vamos, que no updateaba ninguna y así lo hacía saber si se le preguntaba.
+        // vamos a darle funcionalidad y es fácil. Se accede a la base en modo writte y
+        // se updatea la fila.
+
+        // Accedemos a la base que ya hemos declarado arriba.
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Damos la orden del updateado y recogemos el número de rows
+        // afectadas por el mismo que será 1. En tod caso será más
+        // que 0.
+        int rowsUpdated = database.update(P2dbEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        // IMPORTANTE !!!!
+        // Si 1 o más rows se han visto afectadas, entonces noficamos a todos
+        // los LISTENERs que los datos han cambiado.
+        // (el segundo parámetro es un contentObserver que no tengo ni idea ni lo que es).
+        if (rowsUpdated != 0 ){
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Por último, como es lógico, retornamos el número de filas updateadas
+        return rowsUpdated;
     }
 }
 
