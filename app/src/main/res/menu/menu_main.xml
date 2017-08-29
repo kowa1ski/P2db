@@ -1,10 +1,24 @@
+<!-- Como ejercicio se han añadido a este menú otros dos iconos
+  a los cuales les vamos a dar funcionalidad desde el control queç
+  tenemos de ellos en la activity -->
+
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.kova1ski.android.p2db.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/icono_que_mola"
+        android:icon="@android:drawable/ic_lock_idle_low_battery"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="Item"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="101"
+        android:title="@string/action_settings" />
+    <item
+        android:id="@+id/action_setting2"
+        android:orderInCategory="102"
+        android:title="settings2" />
 </menu>

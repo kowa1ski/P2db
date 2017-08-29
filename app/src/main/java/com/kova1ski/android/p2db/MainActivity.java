@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.kova1ski.android.p2db.data.P2dbContract;
 
@@ -111,16 +112,43 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
+
+    // Como práctica vamos a darle funcionalidad al menú de esta actividad.
+    // Para ello vamos a crear en el xml otra opción de menú y luego...
+    // CAMBIAMOS EL IF POR UN SWITCH CASE. Y para terminar, simplemente
+    // Le vamos a dar un toast.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+        // He dejado el comentario anterior que se había generado al crear
+        // esta app. Viene de origen y me da pena quitarlo. Ahora al lío. Acabo de
+        // crear los dos nuevos items del menú. Ähora, en vez de uno desplegable hay
+        // dos y además otro que es un icono de electricidad el cual también forma parte
+        // del menú pero con la propiedad de tener cuerpo
+        //
+        // Vamos a leer en qué icono pegamos.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        // Y ahora vamos a darle funcionalidad a los botones leyendo la variable anterior
+        // y asignando los diferentes toast.
+        switch (id) {
+            case  R.id.action_settings:
+                Toast.makeText(this, "aquí estarían los settings", Toast.LENGTH_SHORT).show();
+                // EN ESTOS CASOS NO EXISTE UN break SINO QUE DAMOS EL return true que
+                // tenía cuando estaba vacío.
+                return true;
+            case R.id.action_setting2:
+                Toast.makeText(this, "aquí estarían los otros settings2", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.icono_que_mola:
+                Toast.makeText(this, "HAS PULSADO EL BOTÓN MOLÓN", Toast.LENGTH_SHORT).show();
+                return true;
+           // NO NOS HACE FALTA UN DEFAULT PORQUE SIEMPRE ESTAMOS return.
+
+
         }
 
         return super.onOptionsItemSelected(item);
