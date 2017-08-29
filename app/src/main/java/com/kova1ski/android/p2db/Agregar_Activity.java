@@ -14,9 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import static com.kova1ski.android.p2db.data.P2dbContract.P2dbEntry;
@@ -316,5 +318,23 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_agregar, menu); // Y yaaaa!!!
         return true; // Y aquí true
+    }
+
+    // Vamos a darle funcionalidad al botón de borrar. Comenzamos asignándole una
+    // función sencilla, un toast.
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Hacemos los del id
+        int id = item.getItemId();
+        switch(id){
+            case R.id.action_borrarAmigo:
+                Toast.makeText(this, "ESTA ACCIÓN BORRARÁ EL CURRENT REGISTRO", Toast.LENGTH_SHORT).show();
+                // Y no nos olvidamos del return true
+                return true;
+        }
+
+
+        // Este return hay que dejarlo tal cual para que funcione tod
+        return super.onOptionsItemSelected(item);
     }
 }
