@@ -237,6 +237,7 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
                 // menos una de ellas ha sido updateada. Y lo decimos también.
                 Toast.makeText(this, "EDICIÓN REALIZADA CON ÉXITO", Toast.LENGTH_SHORT).show();
                 Toast.makeText(this, "Las filas afectadas han sido: "+rowsAffectedFilasAfectadas, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Y el URI usado es el : "+currentItemUri, Toast.LENGTH_LONG).show();
             }
 
         }

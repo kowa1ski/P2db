@@ -234,6 +234,41 @@ public class P2dbProvider extends ContentProvider {
         // vamos a darle funcionalidad y es fácil. Se accede a la base en modo writte y
         // se updatea la fila.
 
+        // IMPORTANTÍSIMO !! VAMOS A MODIFICAR ESTE MÉTODO Y VAMOS A DIFERENCIAR ENTRE LAS URIS
+        // QUE AQUÍ SE ENVÍAN. Haremos uso del uriMatcher y discriminaremos las uris. Luego,
+        // Crearemos un método aparte para updatear UN SOLO ITEM.
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case TODA_LA_TABLA:
+                // El método updateItem lo creamos nuevo para tratar abajo.
+                return updateItem(uri, values, selection, selectionArgs);
+            // Y ahora el que nos interesa de verdad
+            case SINGLE_ITEM_ID:
+                // Para este caso debemos extraer el _id de la URI para identificar
+                // el item en concreto que queremos updatear.
+                // Luego, en la selección haremos , "_id=?" y también los
+                // selection arguments serán un String Array conteniendo el actual ID.
+                selection = P2dbEntry.CN_ID + "=?";
+                selectionArgs = new String[]{
+                        String.valueOf(ContentUris.parseId(uri))
+                };
+                // Y con estas dos cositas modificadas ya pasamos los parámetros al método
+                // creado nuevo y al cual hemos llamado updateItem.
+                return updateItem(uri, values, selection, selectionArgs);
+            // Le metemos un default al switch para controlar la excepción
+            default:
+                throw new IllegalArgumentException("Update no es soportado para " + uri);
+
+        }
+
+    }
+
+        // EL BLOQUE DE CÓDIGO QUE HABÍA AQUÍ HA SIDO PASADO AL MÉTODO updateItem
+
+
+
+    private int updateItem(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+
         // Accedemos a la base que ya hemos declarado arriba.
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -257,7 +292,9 @@ public class P2dbProvider extends ContentProvider {
         // Por último, como es lógico, retornamos el número de filas updateadas
         return rowsUpdated;
     }
+
 }
+
 
 
 
