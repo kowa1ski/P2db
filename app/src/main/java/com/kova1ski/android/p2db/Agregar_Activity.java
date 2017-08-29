@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -74,11 +75,6 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
         }
     // Y le tenemos que poner , ; , aquí.
     };
-
-
-
-
-
 
 
     @Override
@@ -145,29 +141,15 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
             setTitle("EDITAR ESTE REGISTRO");
         }
 
-
-
-
-
-
-
         editTextNombre = (EditText) findViewById(R.id.editTextAgregarNombre);
         editTextTelefono = (EditText) findViewById(R.id.editTextAgregarNumero);
-
-
-
-
-
-
-
-
-
 
     }
 
     private void guardarRegistro() {
 
-        nombre = editTextNombre.getText().toString();
+        nombre = editTextNombre.getText().toString().trim(); // añadimos trim() para quitar
+                                                             // esos molestos espacios al final.
         telefono = parseInt(editTextTelefono.getText().toString());
 
         // Vamos a chequear que NO estamos tratando con un currentItem ni
@@ -318,18 +300,21 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
         editTextTelefono.setText(R.string.texto_vacio);
 
     }
+
+    /**
+     * Llamamos al menú sobreescribiendo aquí. Yo he puesto la palabra , menu , y
+     * ya me ha sugerido el método:
+     * @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    return super.onCreateOptionsMenu(menu);
+                        }
+     Ahora hay que inflar el xml.
+     Y lo hago fijándome en cómo ya está hecho en el main.
+
+      */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_agregar, menu); // Y yaaaa!!!
+        return true; // Y aquí true
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

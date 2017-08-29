@@ -1,0 +1,20 @@
+<!-- He creado sinplemente un nuevo resource menú y he cortapegado
+ en este archivo el código del menú que ya existía para el
+ main y, evidentemente en tools:context le he puesto
+ LA ACTIVIDAD A LA QUE QUIERO QUE SE PEGUE.
+ También le he cambiado el texto de Settings a otro y
+ el +id también para evitar confusiones.
+
+ Ojo, con crear este menú y darle el contexto no basta,
+ hay también que inflarlo desde la actividad-->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.kova1ski.android.p2db.Agregar_Activity">
+    <item
+        android:id="@+id/action_borrarAmigo"
+        android:orderInCategory="100"
+        android:title="BORRALO AMIGO"
+        app:showAsAction="never" />
+</menu>
