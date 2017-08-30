@@ -3,6 +3,7 @@ package com.kova1ski.android.p2db;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -331,7 +333,16 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
                 Toast.makeText(this, "ESTA ACCIÓN BORRARÁ EL CURRENT REGISTRO", Toast.LENGTH_SHORT).show();
 
                 // Vamos a crear un método de borrar y ordenaremos ir hasta allí
-                borrarRegistro();
+                // borrarRegistro(); // Esto ya no servirá aquí
+
+                // Ahora vamos a hacer otra cosa chula.
+                // Ahora vamos a generar un mensaje de confirmación para asegurarnos
+                // de que verdaderamente lo que queremos es borrar el registro
+                // seleccionado. Para ello vamos a llamar a otro procedimiento que será el que
+                // saque la ventanita de confirmación. Si allí, en aquella ventana, ya le
+                // indicamos que sí, será entonces cuando llamaremos (allí, allí) al
+                // procedimiento de borrarRegistro().
+                showDeleteConfirmationDialogVentanitaDeConfirmacion();
 
                 // Y no nos olvidamos del return true
                 return true;
@@ -340,6 +351,56 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
 
         // Este return hay que dejarlo tal cual para que funcione tod
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDeleteConfirmationDialogVentanitaDeConfirmacion() {
+
+        // Vamos a crear un AlertDialog.Builder y comprondremos un mensaje, y
+        // tendremos dos click listeners para los botones de positivo y
+        // negativo dentro del diálogo.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Como no, ahora hay que buildeArlo, jeje.
+
+        // Primero el título.
+        builder.setMessage("ESTÁS A PUNTO DE ELIMINAR ESTE REGISTRO");
+
+        // Y ahora los botones
+
+        // Primero el botón positivo
+        // Dentro de los parámetros es fácilo porque le ponemos el mensaje
+        // y creamos un nuevo listener que nos sirve para controlar su pulsación.
+        builder.setPositiveButton("SÍ, ELIMINAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Usamos este botón para eliminar de una vez por todas
+                // simplemente llamando al método que ya hemos creado en el comit
+                // anterior.
+                borrarRegistro();
+            }
+        });
+
+        // Ahora vamos a por el botón del negativo.
+        builder.setNegativeButton("NoOOOO!!!, PARA. NO elimines", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // El usuario ha clickado en el botón de cancelar, o sea
+                // es este de NoOOOO!!!. simplmente, descartamos este diálogo y
+                // continuamos en la pantalla de edición.
+                // APUNTE: hay que comprobar que el valor del , dialog , no
+                // es null. Que no sé por qué pero es así.
+                if (dialog != null){
+                    dialog.dismiss();
+                }
+
+            }
+        });
+
+        // Una vez confeccionado tod este método, lo finalizamos rematando la
+        // faena. HAY QUE MOSTRARLO !!! JAJAJAJA.
+        // Para ello sí que ahora creamos un objeto de la clase AlertDialog y
+        // le metemos las instrucciones que hemos estado programando.
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void borrarRegistro() {

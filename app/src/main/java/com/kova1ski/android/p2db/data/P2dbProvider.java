@@ -220,6 +220,16 @@ public class P2dbProvider extends ContentProvider {
 
     }
 
+    /**
+     * Este es el delete.
+     * @param uri               Para un solo item proviene de la instrucción en
+     *                          AgregarActivity int rowsDeleted = getContentResolver().delete(currentItemUri, null, null);
+     *                          o sea, que es el valor de currentItemUri el que ocupa
+     *                          el valor en el interior de esta variable , uri ,.
+     * @param selection
+     * @param selectionArgs
+     * @return
+     */
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         // Ya estamos aquí, terminando el proceso que lleva a eliminar el registro ordenado.
@@ -348,6 +358,8 @@ public class P2dbProvider extends ContentProvider {
         // Por último, como es lógico, retornamos el número de filas updateadas
         return rowsUpdated;
     }
+
+
 
 }
 
