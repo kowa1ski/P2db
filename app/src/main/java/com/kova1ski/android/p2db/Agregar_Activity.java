@@ -329,6 +329,10 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
         switch(id){
             case R.id.action_borrarAmigo:
                 Toast.makeText(this, "ESTA ACCIÓN BORRARÁ EL CURRENT REGISTRO", Toast.LENGTH_SHORT).show();
+
+                // Vamos a crear un método de borrar y ordenaremos ir hasta allí
+                borrarRegistro();
+
                 // Y no nos olvidamos del return true
                 return true;
         }
@@ -337,4 +341,47 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
         // Este return hay que dejarlo tal cual para que funcione tod
         return super.onOptionsItemSelected(item);
     }
+
+    private void borrarRegistro() {
+
+        //Una pequeña comprobación
+        if(currentItemUri != null){
+            // Y ahora sí al lío
+            int rowsDeleted = getContentResolver().delete(currentItemUri, null, null);
+
+            // No nos olvidemos que, con esta instrucción estamos enviando el
+            // flujo de trabajo al Provider. Allí tiene que estar construido
+            // el método detele.
+
+            // Y ya estaría hecho así que vamos a comunicar al usuario que se
+            // ha llevado tod a cabo tal y como estaba planeado.
+            if (rowsDeleted == 0){
+                // Si no hay filas borradas es que, evidentemente, no ha habido deletes
+                Toast.makeText( this, "ERROR!! NO SE HA ELIMINADO NINGÚN REGISTRO !", Toast.LENGTH_SHORT).show();
+
+            } else {
+                // Si sí que hay filas borradas es que se ha borrado el registro.
+                Toast.makeText(this, "YeEEEEaAAAA REGISTRO ELIMINADO", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+        // Y ahora no nos olvidamos de cerrar la actividad
+        finish();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
