@@ -222,7 +222,63 @@ public class P2dbProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        // Ya estamos aquí, terminando el proceso que lleva a eliminar el registro ordenado.
+        // Como, no, accedemos a la base
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        // Vamos a declarar una variable que recoja el número de rows deleted
+        int rowsDeleted;
+
+        // ahora hacemos los del uriMatcher
+        final int match = sUriMatcher.match(uri);
+
+        // Y lo leemos y actuamos en consecuencia
+        switch (match){
+            case TODA_LA_TABLA:
+                // En este caso hay que borrar toda la tabla.
+                // Este caso aún no lo he contemplado en las actividades de origen
+                rowsDeleted = database.delete(P2dbEntry.TABLE_NAME, selection, selectionArgs);
+                // Y ya. Al final del switch le return el rowsdeleted.
+                break;
+            case SINGLE_ITEM_ID:
+                // Tenemos que modificar las claúsulas y tal.
+
+                // Evidentemente localizaremos el item desde su _id. Así que
+                // primero le decimos que queremos buscar en la columna del _id.
+                selection = P2dbEntry.CN_ID + "=?";
+
+                // Ahora le decimos qué registro de esa columna de _id es
+                // el que queremos.
+                selectionArgs = new String[] {
+                        String.valueOf(ContentUris.parseId(uri))
+                };
+
+                // Ahora ya tod ordenadito, le mandamos ejecutar la
+                // instrucción.
+                rowsDeleted = database.delete(P2dbEntry.TABLE_NAME, selection, selectionArgs);
+
+                // Luego abajo ya retornamos esta varible de las filas borradas.
+                break;
+            // Necesitamos el default para que nos capture una eventual excepción.
+            default:
+                throw new IllegalArgumentException("Deletion is not suported for " + uri);
+
+        }
+
+
+        // Una pequeña medición para asegurarnos de que hay almenos una fila
+        // que ha sido deleted y, si es así, avisamos a todos los listeners que
+        // los datos han cambiado.
+        if (rowsDeleted != 0){
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Ahora sí que vamos a , return ,.
+        return rowsDeleted;
+
+
+        // Quitamos esto último porque vamos a retornar otro valor tod el rato.
+        // return 0;
     }
 
 
