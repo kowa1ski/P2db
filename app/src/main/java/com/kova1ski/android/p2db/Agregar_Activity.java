@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +21,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import static com.kova1ski.android.p2db.data.P2dbContract.P2dbEntry;
@@ -346,11 +346,94 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
 
                 // Y no nos olvidamos del return true
                 return true;
+
+            // Por supuesto, ahora hay que contemplar que nos marchemos
+            // dándole a la tecla de atrás y para eso hay que poner algún
+            // Diálogo o algo si es que ha habido agún cambio en los editText
+
+            // (Jajaj, ahora que tod está hecho me he dado cuenta que en esta
+            // versión que estoy creando, este no tengo idea de para qué sirve)
+            // El que me interesa es el botón atras que lo haré en onBackPresed, en
+            // otro sitio. Lo bueno es que hemos dejado preparado el AlertDialog
+            // para cuando invoquemos al que voy a hacer ahora ese onAbackPressed
+
+            case android.R.id.home:
+                //Si el item no ha sido modificado, le dejamos ir.
+                if (!itemHasChanged){
+                    NavUtils.navigateUpFromSameTask(this);
+                    return true;
+                }
+                // Pero si resulta que sí que ha habido cambios, entonces
+                // hay que hacer algo al respecto.
+                // Vamos a montar un diálogo en este , botón atrás , porque
+                // hemos detectado que ha habido cambios y queremos abandonar la
+                // pantalla sin salvar los cambios.
+                // Ojo --- que hay que implementar ese método con el alt+intro.
+                DialogInterface.OnClickListener botonAtrasHabiendoCambios =
+                        new DialogInterface.OnClickListener(){
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                // El usuario ha clickado el botón DISCARD para navegar
+                                // a la actividad parent.
+                                NavUtils.navigateUpFromSameTask(Agregar_Activity.this);
+
+                            }
+                        }; // Y poner este punto y coma.
+
+                // Una vez creado el listener de justo arriba, vamos a mostrar al
+                // usuario el diálogo que le informa de que ha habido cambios. Pâra ello
+                // creamos un método que nos haga tod el trabajo y le TENEMOS QUE 
+                // PASAR este , botonAtrasHabiendoCambios ,.
+                showUnsavedChangesDialogCuidadoQueHayCambiosSinGuardar(botonAtrasHabiendoCambios);
+
+
+
+
+
+
         }
 
 
         // Este return hay que dejarlo tal cual para que funcione tod
         return super.onOptionsItemSelected(item);
+    }
+
+    // Ojo que al crear el método, que lo he hecho con la bombilla desde donde es llamado
+    // no me ha reconocido bien la clase de la variable que le pasaba. Se creía que era un
+    // OnclickListener y le he tenido que meter a mano lo del DialogInterface.
+    private void showUnsavedChangesDialogCuidadoQueHayCambiosSinGuardar(
+            DialogInterface.OnClickListener botonAtrasHabiendoCambios) {
+
+        // Creamos un AlertDialog.Builder y definimos el mensaje, y también
+        // los click listeners para los botones positivo y negativo en el diálogo.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this); // El contexto se lo tene
+                                                                     // que indicar
+        builder.setMessage("Yeeee !! Que te vas sin salvar, Estás seguro?");
+        builder.setPositiveButton("Se ha descartado", botonAtrasHabiendoCambios);
+        builder.setNegativeButton("MENOS MAL QUE NO NOS HEMOS IDO :-)",
+                // ATENTOS AQUÍ QUE HAY QUE CREAR UN LISTENER
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Si estamos aquí es que el usuario ha clickado en
+                        // continuar con la edición, es decir el botón que
+                        // se quiere negarse a marcharse de la actividad.
+                        if (dialog != null){
+                            dialog.dismiss(); // y ya.
+                        }
+
+                    }
+                }); // Y el jodido punto y coma este.
+
+        // Después de tod lo codificado que no se nos olvide mostrar
+        // el mensaje en sí. Eso es lo que hacemos a continución.
+        AlertDialog alertdialog = builder.create();
+        alertdialog.show();
+
+
     }
 
     private void showDeleteConfirmationDialogVentanitaDeConfirmacion() {
@@ -428,6 +511,42 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
         }
         // Y ahora no nos olvidamos de cerrar la actividad
         finish();
+    }
+
+    // Este método mola mucho porque parece que lo hago pero pongo las primeras
+    // letras y se genera solo. Eso sí sólo sale esto:
+    // @Override
+    //public void onBackPressed() {
+    //    super.onBackPressed();
+    //  }
+    // Así que vamos a completarlo.
+    @Override
+    public void onBackPressed() {
+        // Si el item no ha cambiado dejamos que continúe el
+        // flujo del programa.
+        if (!itemHasChanged) {
+            super.onBackPressed();
+            return; // y le añadimos este return.
+        }
+        // En caso de que haya cambiado el item tendremos que lanzar un
+        // mensaje que, menos mal, ya hemos creado, ahora sólo tenemos que
+        // llamarlo. Lo acabamos de hacer justo antes así que vamos a recordar
+        // que tenemos que crear un listener antes de llamar al método.
+        DialogInterface.OnClickListener onBackListenerEscuchadorDelOnBack =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // El usuario clicka el Discard button y la
+                        // actividad actual se cierra
+                        finish();
+                    }
+                }; // y el punto y coma este. Joer qué coñazo.
+
+        // Ahora sí mostramos el diálogo porque hace falta y, para ello
+        // llamamos al método que habíamos creado también para el , case , aquel
+        // que tratamos antes.
+        showUnsavedChangesDialogCuidadoQueHayCambiosSinGuardar(onBackListenerEscuchadorDelOnBack);
+
     }
 }
 
