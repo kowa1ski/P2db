@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -54,6 +55,11 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
     // sacamos aquí para hacerlas accesibles.
     private String nombre;
     private int telefono;
+
+    // Aquí mismo declaramos la variable para controlar el teclado.
+    // Es que estoy viendo que nos va a hacer falta en varios métodos y, es por eso
+    // que la tengo que sacar aquí fuera.
+    InputMethodManager tecladoPaFuera;
 
 
     // Esta técnica que vamos a utilizar es fantástica, no
@@ -289,6 +295,23 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
             // Tenemos un poco de cuidado con diferenciar los datos de
             // String y los , int , y arreglado.
             editTextNombre.setText(nombreParaEditar);
+
+            // Y algo de mi cosecha que acabo de ver por internet en hermosaprogramacion. Voy
+            // a hacer que el texto del nombre esté selecionado.
+            editTextNombre.selectAll(); // joder que está guay
+
+            // Y ahora quiero que el teclado salga, o sea, que después de lo anteior, de
+            // haber seleccionado la palabra, el teclado esté fuera para empezar a editar de
+            // inmediato. Para ello he estado mirando en hermosaprogramación y tengo que hacer
+            // uso de la clase InputMethodMAnager y llamar a un procedimiento que he encontrado
+            // mirando por internet.
+            tecladoPaFuera =
+                    (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            // Nos aseguramos que tiene el foco.
+            editTextNombre.requestFocus();
+            // Y ahora sí sacamos el teclado.
+            tecladoPaFuera.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
             editTextTelefono.setText(Integer.toString(telefonoParaEditar));
 
         }
@@ -426,8 +449,19 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
 
             }
         }
+        // hacemos que el teclado no vaya a salir cuando cambiemos de pantalla.
+        // Vaya por delante que esto se me ha ocurrido a mi. El tema es que
+        ocultarTeclado();
+
+
+
+
         // Y ahora no nos olvidamos de cerrar la actividad
         finish();
+    }
+
+    private void ocultarTeclado() {
+        tecladoPaFuera.hideSoftInputFromWindow(editTextNombre.getWindowToken(), 0);
     }
 }
 

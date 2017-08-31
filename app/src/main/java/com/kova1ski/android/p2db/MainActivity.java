@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
 
+
+
         // Buscamos la lista donde publicamos los registros que devulelve el cursor.
         ListView itemListView = (ListView) findViewById(R.id.listaItemsEnContentMain);
 
