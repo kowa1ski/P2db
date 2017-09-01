@@ -148,6 +148,10 @@ public class Agregar_Activity extends AppCompatActivity implements LoaderManager
         editTextNombre = (EditText) findViewById(R.id.editTextAgregarNombre);
         editTextTelefono = (EditText) findViewById(R.id.editTextAgregarNumero);
 
+        // Le ponemos a nuestro listen del cambio a escuchar a los editTexts
+        editTextNombre.setOnTouchListener(touchListener);
+        editTextTelefono.setOnTouchListener(touchListener);
+
     }
 
     private void guardarRegistro() {
