@@ -1,5 +1,12 @@
 package com.kova1ski.android.p2db;
 
+/**
+ * Damos por terminada esta app porque creo que ha incluído todos los conceptos
+ * básicos imprescindibles. Sirva este comentario para forzar el último
+ * comit. Ha sido un placer conmigo mismo :-). Lo has hecho muy bien, me
+ * ha gustado mucho.
+ */
+
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.CursorLoader;
